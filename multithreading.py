@@ -26,3 +26,4 @@ for t in threads:
 
 
 #ZEND
+#https://github.com/bfortuner/ml-study/blob/master/multitasking_python.ipynb
