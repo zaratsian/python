@@ -2,7 +2,7 @@
 
 ########################################################################################################
 #
-#   Sklean Modeling
+#   Sklearn Modeling
 #
 ########################################################################################################
 
@@ -23,11 +23,20 @@ from sklearn.tree import DecisionTreeClassifier
 
 ########################################################################################################
 #
+#   Global Functions - Used for both Model Building and Model Scoring
+#
+########################################################################################################
+
+
+
+
+########################################################################################################
+#
 #   Input Data
 #
 ########################################################################################################
 
-col_names = ['age', 'workclass', 'fnlwgt', 'education', 'education_num', 'martial_status', 'occupation', 'relationship', 'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income']
+col_names = ['age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital_status', 'occupation', 'relationship', 'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income']
 data = pd.read_csv('/tmp/adult.data.txt', header=None, names=col_names)
 
 ########################################################################################################
@@ -40,8 +49,11 @@ data.head()
 data.iloc[0]
 data.columns
 data.dtypes
-data.describe()
 data.shape
+
+transformed_df['education'].value_counts()
+transformed_df['marital_status'].value_counts()
+data.describe()
 
 ########################################################################################################
 #
@@ -64,11 +76,41 @@ list_category       = [col[0] for col in data.dtypes.iteritems() if (col[1].name
 #
 ########################################################################################################
 
+# Strip Whitespace
+data = data.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+
 # Derive Data vars, if date exists
 if var_date != None:
     data['year']    = pd.to_datetime(data[var_date]).dt.year
     data['month']   = pd.to_datetime(data[var_date]).dt.month
     data['day']     = pd.to_datetime(data[var_date]).dt.day
+
+def education_groupings(df):
+    if df['education'] == '12th' or df['education'] == '11th' or df['education'] == '10th' or df['education'] == '9th':
+        group = 'some-HS'
+    elif df['education'] == 'Preschool' or df['education'] == '1st-4th' or df['education'] == '5th-6th' or df['education'] == '7th-8th':
+        group = 'dropout-before-HS'
+    elif df['education'] == 'Assoc-voc' or df['education'] == 'Assoc-acdm':
+        group = 'associates'
+    else:
+        group = df['education']
+    return group 
+
+transformed_df = data
+transformed_df['education'] = transformed_df.apply(education_groupings, axis=1)
+transformed_df['education'].value_counts()
+
+def marital_groupings(df):
+    if df['marital_status'] == 'Married-civ-spouse' or df['marital_status'] == 'Married-AF-spouse' or df['marital_status'] == 'Married-spouse-absent':
+        group = ' Married'
+    elif df['marital_status'] == 'Divorced' or df['marital_status'] == 'Separated' or df['marital_status'] == 'Widowed':
+        group = ' Not-married'
+    else:
+        group = df['marital_status']
+    return group
+
+transformed_df['marital_status'] = transformed_df.apply(marital_groupings, axis=1)
+transformed_df['marital_status'].value_counts()
 
 # Get Dummies
 transformed_df = pd.get_dummies(data, columns=list_category)
