@@ -4,6 +4,8 @@
 #
 #   Sklearn Scoring
 #
+#   Usage: sklearn_deployment_score_script.py <data_path_and_filename.csv>
+#
 ########################################################################################################
 
 import os,sys,csv,re
@@ -30,7 +32,7 @@ def define_schema():
                     'fnlwgt':np.int64, 
                     'education':np.object, 
                     'education_num':np.int64, 
-                    'martial_status':np.object, 
+                    'marital_status':np.object, 
                     'occupation':np.object, 
                     'relationship':np.object, 
                     'race':np.object, 
@@ -74,6 +76,29 @@ def transform_drop_ignored_vars(df):
 def transform_fillna(df):
     return df.fillna(-1)
 
+
+def education_groupings(df):
+    if df['education'] == '12th' or df['education'] == '11th' or df['education'] == '10th' or df['education'] == '9th':
+        group = 'some-HS'
+    elif df['education'] == 'Preschool' or df['education'] == '1st-4th' or df['education'] == '5th-6th' or df['education'] == '7th-8th':
+        group = 'dropout-before-HS'
+    elif df['education'] == 'Assoc-voc' or df['education'] == 'Assoc-acdm':
+        group = 'associates'
+    else:
+        group = df['education']
+    return group 
+
+
+def marital_groupings(df):
+    if df['marital_status'] == 'Married-civ-spouse' or df['marital_status'] == 'Married-AF-spouse' or df['marital_status'] == 'Married-spouse-absent':
+        group = 'Married'
+    elif df['marital_status'] == 'Divorced' or df['marital_status'] == 'Separated' or df['marital_status'] == 'Widowed':
+        group = 'Not-married'
+    else:
+        group = df['marital_status']
+    return group 
+
+
 ########################################################################################################
 #
 #   Input Data
@@ -97,7 +122,10 @@ except:
 #
 ########################################################################################################
 
-transformed_df = transform_get_dummies(df)
+transformed_df = df
+transformed_df['education'] = transformed_df.apply(education_groupings, axis=1)
+transformed_df['marital_status'] = transformed_df.apply(marital_groupings, axis=1)
+transformed_df = transform_get_dummies(transformed_df)
 transformed_df = transform_drop_ignored_vars(transformed_df)
 transformed_df = transform_fillna(transformed_df)
 
@@ -115,6 +143,7 @@ df['predicted'] = pd.DataFrame(predicted)
 
 # Save to Database, filesystem, Hadoop, etc. 
 df.to_csv('/tmp/my_scored_data.csv')
+
 
 
 #ZEND
