@@ -12,24 +12,24 @@
 #
 ##################################################################################################################################
 
+
+import sys
 import oauth2 as oauth
-import time
+import datetime,time
 import re
 import json
-#import simplejson
 import csv
 import codecs
-import datetime
 
 
 try:
     consumer = oauth.Consumer(
-        key="ILuwhmqTTlPBMJmWo09HJMyeS",
-        secret="MMbOu3YJFZXcrINs2me60MN1k22480IV8KH4i6n2UH94F67PT4")
+        key="twitter_consumer_key_goes_here",
+        secret="twitter_consumer_secret_goes_here")
     
     token = oauth.Token(
-        key="1138224962-7ISJ4AMOXwKSIer60ogZfIUSTeHVx8W5xQfp27M", 
-        secret="4InN8NJMIFYwCePyoXqBvhT7nCX1l2eJTIIlSLx0OEV32")
+        key="twitter_token_key_goes_here", 
+        secret="twitter_token_secret_goes_here")
     
     client = oauth.Client(consumer, token)
 except:
