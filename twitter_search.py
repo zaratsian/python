@@ -2,7 +2,7 @@
 ##################################################################################################################################
 #
 #   Twitter - Collect tweets based on search term
-#   Created in 2016
+#   Created in 2016, recently tested on 15May2018 with python Anaconda 3.6.4
 #
 #   References:
 #       https://developer.twitter.com/en/docs/api-reference-index
