@@ -7,6 +7,9 @@
 #       file.py <video_file> <number_of_images_per_second>
 #       file.py "/assets/IMG_7942.MOV" 2
 #
+#   Dependencies:
+#       sudo apt-get install python-opencv
+#
 ####################################################################################################
 
 import sys
