@@ -8,6 +8,7 @@
 #       file.py --image_prefix oceans_11 --video_filepath /tmp/youtube_imm6OR605UI.mp4 --sampling_rate 1000 --image_width 400
 #
 #   Dependencies:
+#       conda install -c menpo opencv
 #       sudo apt-get install python-opencv
 #
 #   To Do:
@@ -15,11 +16,11 @@
 #
 ####################################################################################################
 
+
 import sys,re
 import datetime,time
 import cv2
 import argparse
-
 
 
 def convert_video_to_images(image_prefix, video_filepath, sampling_rate, image_width):
